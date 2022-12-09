@@ -1,11 +1,13 @@
 const jwt=require('jsonwebtoken')
 const CustomAPIError=require('../errors/custom-error')
+const {BadRequestError}=require('../errors')
 
+//login route code
 const login=async(req,res)=>{
     const {username,password}=req.body
     
     if(!username||!password){
-        throw new CustomAPIError('please provide name and password...',400)
+        throw new BadRequestError('please provide name and password...')
     }    
 
     const id=new Date().getDate() //normally provided by database
@@ -17,12 +19,19 @@ const login=async(req,res)=>{
     res.status(200).json({ msg: 'user created', token:token })
 }
 
+
+
+//dashboard route code
 const dashboard=async(req,res)=>{
+    console.log(req.user);
+
     const luckyNumber=Math.round(Math.random()*100)
+    
     res.status(200).json({
-        msg:`hello, abcd`,
+        msg:`hello, ${req.user.username}`,
         secret:`here is your authorised data, your lucky number is ${luckyNumber}`
     })
+
 }
 
 module.exports={
